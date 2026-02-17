@@ -1,0 +1,112 @@
+table website_sessions
+	lineageTag: 0a85791e-0ff0-4cc3-a7ae-964c1ad397c2
+
+	column session_id
+		dataType: string
+		lineageTag: 445b5b7f-f704-41b9-a090-01517476f45b
+		summarizeBy: none
+		sourceColumn: session_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column session_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 3ab5505b-aa5c-47ce-ae93-fc4f309c9a2d
+		summarizeBy: none
+		sourceColumn: session_date
+
+		variation Variation
+			isDefault
+			relationship: 0d5b05dc-4492-43e6-8c18-ff69a0ff3538
+			defaultHierarchy: LocalDateTable_4049d5fc-060d-4d79-a1c5-841d9a081a34.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column customer_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 10e14794-6c60-43c9-beda-e2ab8520a6fd
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column store_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 9e63ddfe-01f2-4e2a-a8ff-bf8ad1e467a5
+		summarizeBy: sum
+		sourceColumn: store_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column device_type
+		dataType: string
+		lineageTag: d97e8674-a462-4c46-8554-707940bdbde1
+		summarizeBy: none
+		sourceColumn: device_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column browser_os
+		dataType: string
+		lineageTag: ddfacf3d-4c65-47cc-8226-799b96f94a14
+		summarizeBy: none
+		sourceColumn: browser_os
+
+		annotation SummarizationSetBy = Automatic
+
+	column session_purchase_made
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: f7f8456c-4138-4c42-a923-854bbeecb7c8
+		summarizeBy: none
+		sourceColumn: session_purchase_made
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column session_duration_minutes
+		dataType: int64
+		formatString: 0
+		lineageTag: a13cb031-8da1-45a8-a38b-7c29bc798c75
+		summarizeBy: sum
+		sourceColumn: session_duration_minutes
+
+		annotation SummarizationSetBy = Automatic
+
+	column session_pages_visited
+		dataType: int64
+		formatString: 0
+		lineageTag: db1de1c2-5c54-42e1-af1d-068962552612
+		summarizeBy: sum
+		sourceColumn: session_pages_visited
+
+		annotation SummarizationSetBy = Automatic
+
+	column session_quality_score
+		dataType: double
+		lineageTag: 7bd44a5c-3651-4442-b18b-dba4e9e0da8d
+		summarizeBy: sum
+		sourceColumn: session_quality_score
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition website_sessions = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\nistl\OneDrive\Documents\dataviz-project\website_sessions.csv"),[Delimiter=",", Columns=10, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"session_id", type text}, {"session_date", type date}, {"customer_id", Int64.Type}, {"store_id", Int64.Type}, {"device_type", type text}, {"browser_os", type text}, {"session_purchase_made", type logical}, {"session_duration_minutes", Int64.Type}, {"session_pages_visited", Int64.Type}, {"session_quality_score", type number}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
