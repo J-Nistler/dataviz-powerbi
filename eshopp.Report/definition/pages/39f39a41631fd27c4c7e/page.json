@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
-  "name": "e5f173d3d80390f7c8c9",
-  "displayName": "Customers",
+  "name": "39f39a41631fd27c4c7e",
+  "displayName": "Sessions",
   "displayOption": "FitToPage",
   "height": 720,
   "width": 1280

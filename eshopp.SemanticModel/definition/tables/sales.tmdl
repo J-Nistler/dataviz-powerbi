@@ -1,0 +1,133 @@
+table sales
+	lineageTag: 7d543fdb-bb89-4b26-baf8-e4f19a0b9b03
+
+	measure total_revenue = SUM(sales[discounted_price])
+		lineageTag: fe558488-3e92-40b1-beb6-a86d54e237e4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure total_units_sold = SUM(sales[sale_quantity])
+		formatString: 0
+		lineageTag: 0e7c9a04-7a53-4635-81a2-99073e66a0d0
+
+	measure discounted_revenue = SUMX(sales, sales[sale_quantity] * sales[discounted_price])
+		lineageTag: 221b9fd1-55c4-48da-802e-57ab4942fc69
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure revenue_in_feb = CALCULATE([discounted_revenue], DATESBETWEEN(dates[date], DATE(2025, 02, 01), DATE(2025, 02, 28)))
+		formatString: 0
+		lineageTag: 4effda5b-07eb-43d8-9a37-d6f82ac4057c
+
+		changedProperty = IsHidden
+
+	column sale_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 81cb60f0-5269-4428-8259-ee3694f792af
+		summarizeBy: sum
+		sourceColumn: sale_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 95afa320-ae15-4bbe-82ee-05c988acf4cd
+		summarizeBy: none
+		sourceColumn: date_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 880b36dc-9c6d-455d-9616-cb8df580f2d5
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: int64
+		formatString: 0
+		lineageTag: df18f005-a872-4b3a-be4a-613cd2f5cb1c
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column store_id
+		dataType: int64
+		formatString: 0
+		lineageTag: c84f5c27-c3b7-4435-92b5-c3e3091f6e6e
+		summarizeBy: none
+		sourceColumn: store_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column sale_quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: c2d42f5c-8254-46b4-b997-9a1835f3ce53
+		summarizeBy: sum
+		sourceColumn: sale_quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column sale_discount
+		dataType: double
+		lineageTag: 4abc1d19-6f4c-4cfb-b6f7-2297012a786d
+		summarizeBy: sum
+		sourceColumn: sale_discount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column price = sales[sale_quantity] * RELATED(products[product_list_price])
+		lineageTag: 27f2de5e-11ac-4a03-a8fc-bf1a439b8494
+		summarizeBy: none
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column discounted_price = sales[price] * (1-sales[sale_discount])
+		lineageTag: e8de6a56-52a8-4794-9186-b25e87f5ff42
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column bulk_order = IF(sales[sale_quantity] > 3, True, False)
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 6cd72a29-db93-43b0-8289-d1a504641e42
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_size = SWITCH(TRUE, sales[discounted_price] < 100, "Tiny", sales[discounted_price] < 200, "Mid", "Massive")
+		lineageTag: 4ab41542-6c11-4958-bfc6-4b6d22905205
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition sales = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\Library DIN\Documents\GitHub\dataviz-powerbi\sales.csv"),[Delimiter=",", Columns=7, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"sale_id", Int64.Type}, {"date_id", Int64.Type}, {"customer_id", Int64.Type}, {"product_id", Int64.Type}, {"store_id", Int64.Type}, {"sale_quantity", Int64.Type}, {"sale_discount", type number}}),
+				    #"Removed Duplicates" = Table.Distinct(#"Changed Type", {"sale_id"})
+				in
+				    #"Removed Duplicates"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

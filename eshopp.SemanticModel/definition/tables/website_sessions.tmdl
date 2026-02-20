@@ -1,6 +1,10 @@
 table website_sessions
 	lineageTag: 0a85791e-0ff0-4cc3-a7ae-964c1ad397c2
 
+	measure session_quality_score_avg_scaled = INT(AVERAGEX(website_sessions, website_sessions[session_quality_score] * 100))
+		formatString: 0
+		lineageTag: 30e5bb11-cfff-4938-ba49-204f63f8fe40
+
 	column session_id
 		dataType: string
 		lineageTag: 445b5b7f-f704-41b9-a090-01517476f45b
@@ -38,7 +42,7 @@ table website_sessions
 		dataType: int64
 		formatString: 0
 		lineageTag: 9e63ddfe-01f2-4e2a-a8ff-bf8ad1e467a5
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: store_id
 
 		annotation SummarizationSetBy = Automatic
@@ -51,22 +55,12 @@ table website_sessions
 
 		annotation SummarizationSetBy = Automatic
 
-	column browser_os
-		dataType: string
-		lineageTag: ddfacf3d-4c65-47cc-8226-799b96f94a14
-		summarizeBy: none
-		sourceColumn: browser_os
-
-		annotation SummarizationSetBy = Automatic
-
 	column session_purchase_made
 		dataType: boolean
 		formatString: """TRUE"";""TRUE"";""FALSE"""
 		lineageTag: f7f8456c-4138-4c42-a923-854bbeecb7c8
 		summarizeBy: none
 		sourceColumn: session_purchase_made
-
-		changedProperty = DataType
 
 		annotation SummarizationSetBy = Automatic
 
@@ -98,15 +92,46 @@ table website_sessions
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
+	column browser
+		dataType: string
+		lineageTag: 3fc4c8c5-8277-49bc-a133-c15dd65f1d08
+		summarizeBy: none
+		sourceColumn: browser
+
+		annotation SummarizationSetBy = Automatic
+
+	column os
+		dataType: string
+		lineageTag: 3a883491-d0d8-4828-89f6-4a213b5fe947
+		summarizeBy: none
+		sourceColumn: os
+
+		annotation SummarizationSetBy = Automatic
+
+	column os_on_device
+		dataType: string
+		lineageTag: 0d7fb125-48b4-4cf2-828f-07bb36cbf49e
+		summarizeBy: none
+		sourceColumn: os_on_device
+
+		annotation SummarizationSetBy = Automatic
+
 	partition website_sessions = m
 		mode: import
 		source =
 				let
-				    Source = Csv.Document(File.Contents("C:\Users\nistl\OneDrive\Documents\dataviz-project\website_sessions.csv"),[Delimiter=",", Columns=10, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    Source = Csv.Document(File.Contents("C:\Users\Library DIN\Documents\GitHub\dataviz-powerbi\website_sessions.csv"),[Delimiter=",", Columns=10, Encoding=1252, QuoteStyle=QuoteStyle.None]),
 				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
-				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"session_id", type text}, {"session_date", type date}, {"customer_id", Int64.Type}, {"store_id", Int64.Type}, {"device_type", type text}, {"browser_os", type text}, {"session_purchase_made", type logical}, {"session_duration_minutes", Int64.Type}, {"session_pages_visited", Int64.Type}, {"session_quality_score", type number}})
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"session_id", type text}, {"session_date", type date}, {"customer_id", Int64.Type}, {"store_id", Int64.Type}, {"device_type", type text}, {"browser_os", type text}, {"session_purchase_made", type logical}, {"session_duration_minutes", Int64.Type}, {"session_pages_visited", Int64.Type}, {"session_quality_score", type number}}),
+				    #"Split Column by Delimiter" = Table.SplitColumn(#"Changed Type", "browser_os", Splitter.SplitTextByDelimiter("|", QuoteStyle.Csv), {"browser_os.1", "browser_os.2"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Split Column by Delimiter",{{"browser_os.1", type text}, {"browser_os.2", type text}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type1",{{"browser_os.1", "browser"}, {"browser_os.2", "os"}}),
+				    #"Inserted Merged Column" = Table.AddColumn(#"Renamed Columns", "os_on_device", each Text.Combine({[os], [device_type]}, " on "), type text),
+				    #"Replaced Value" = Table.ReplaceValue(#"Inserted Merged Column",null,0.5,Replacer.ReplaceValue,{"session_quality_score"})
 				in
-				    #"Changed Type"
+				    #"Replaced Value"
 
 	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
 

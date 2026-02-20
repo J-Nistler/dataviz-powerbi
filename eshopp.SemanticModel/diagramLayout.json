@@ -10,8 +10,8 @@
       "nodes": [
         {
           "location": {
-            "x": 233,
-            "y": 220.5
+            "x": 247,
+            "y": 736.25
           },
           "nodeIndex": "customers",
           "nodeLineageTag": "0402139a-9ab9-4264-85ee-387796dd943d",
@@ -19,12 +19,12 @@
             "height": 224,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 1
         },
         {
           "location": {
-            "x": 284,
-            "y": 35.5
+            "x": 56,
+            "y": 145
           },
           "nodeIndex": "website_sessions",
           "nodeLineageTag": "0a85791e-0ff0-4cc3-a7ae-964c1ad397c2",
@@ -32,7 +32,59 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 0
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 537,
+            "y": 363
+          },
+          "nodeIndex": "sales",
+          "nodeLineageTag": "7d543fdb-bb89-4b26-baf8-e4f19a0b9b03",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 901,
+            "y": 653.125
+          },
+          "nodeIndex": "dates",
+          "nodeLineageTag": "c50d19fa-4583-40b6-abdc-f387116ff7bf",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 909,
+            "y": 93.125
+          },
+          "nodeIndex": "products",
+          "nodeLineageTag": "d84e2ece-d7fe-4c8d-b63f-506733584099",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 537,
+            "y": 0
+          },
+          "nodeIndex": "stores",
+          "nodeLineageTag": "f4a2efb8-e74a-47c8-a3a3-e3524a63f9db",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 5
         }
       ],
       "name": "All tables",
