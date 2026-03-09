@@ -5,6 +5,14 @@ table website_sessions
 		formatString: 0
 		lineageTag: 30e5bb11-cfff-4938-ba49-204f63f8fe40
 
+	measure max_quality_score = 100
+		formatString: 0
+		lineageTag: 50aec8fb-71e3-4373-8d2b-0e9f44f6c3f5
+
+	measure target_quality_score = 50
+		formatString: 0
+		lineageTag: 2f94e75d-b11e-4f79-8157-03e83938e427
+
 	column session_id
 		dataType: string
 		lineageTag: 445b5b7f-f704-41b9-a090-01517476f45b

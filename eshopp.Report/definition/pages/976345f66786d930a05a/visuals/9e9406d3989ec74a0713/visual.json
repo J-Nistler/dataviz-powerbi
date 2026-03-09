@@ -1,0 +1,174 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.6.0/schema.json",
+  "name": "9e9406d3989ec74a0713",
+  "position": {
+    "x": 10.341113105924595,
+    "y": 0,
+    "z": 0,
+    "height": 359.64093357271094,
+    "width": 1269.6588868940753,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "areaChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "website_sessions"
+                    }
+                  },
+                  "Property": "session_date"
+                }
+              },
+              "queryRef": "website_sessions.session_date",
+              "nativeQueryRef": "session_date",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "website_sessions"
+                        }
+                      },
+                      "Property": "session_duration_minutes"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(website_sessions.session_duration_minutes)",
+              "nativeQueryRef": "Sum of session_duration_minutes"
+            }
+          ]
+        },
+        "Y2": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "website_sessions"
+                        }
+                      },
+                      "Property": "session_pages_visited"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(website_sessions.session_pages_visited)",
+              "nativeQueryRef": "Sum of session_pages_visited"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "website_sessions"
+                  }
+                },
+                "Property": "session_date"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Session Duration & Pages Over Time'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "d6cdc78dd272b0d96002",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "website_sessions"
+                  }
+                },
+                "Property": "session_duration_minutes"
+              }
+            },
+            "Function": 0
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "72e701e79199545d8381",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "website_sessions"
+              }
+            },
+            "Property": "session_date"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "89580ed3b53b00540a01",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "website_sessions"
+                  }
+                },
+                "Property": "session_pages_visited"
+              }
+            },
+            "Function": 0
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}
